@@ -1,0 +1,12 @@
+package com.example.dictionary.feature_dictionary.domain.model
+
+import com.example.dictionary.feature_dictionary.data.remote.dto.MeaningDto
+import com.example.dictionary.feature_dictionary.data.remote.dto.PhoneticDto
+
+data class WordInfo(
+    val meanings: List<MeaningDto>,
+    val origin: String,
+    val phonetic: String,
+    val phonetics: List<PhoneticDto>,
+    val word: String
+)
