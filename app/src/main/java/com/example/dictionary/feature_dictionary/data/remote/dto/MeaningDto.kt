@@ -9,7 +9,7 @@ data class MeaningDto(
 
     fun toMeaning(): Meaning {
         return Meaning(
-            definitions = definitions,
+            definitions = definitions.map { it.toDefinition() },
             partOfSpeech = partOfSpeech
         )
     }

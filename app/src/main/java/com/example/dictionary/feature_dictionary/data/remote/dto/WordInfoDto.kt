@@ -11,10 +11,9 @@ data class WordInfoDto(
 ) {
     fun toWordInfo(): WordInfo {
         return WordInfo(
-            meanings = meanings,
+            meanings = meanings.map { it.toMeaning() },
             origin =origin,
             phonetic = phonetic,
-            phonetics = phonetics,
             word = word
         )
     }
