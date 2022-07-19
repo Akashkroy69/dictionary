@@ -8,13 +8,17 @@ import com.example.dictionary.feature_dictionary.domain.repository.WordInfoRepos
 import kotlinx.coroutines.flow.Flow
 
 class WordInfoRepositoryImpl(
+    //this class constructor takes following 2 dependencies
     private val api: DictionaryAPI,
     private val dao: WordInfoDAO
 ) : WordInfoRepository {
 
-    //Here only we will have the code for caching.
-    //here we will keep the single source of truth in mind: All the data comes from database. It means that even we get
-    // the data from our API then also we will put this in DB first. Then from there itself we will access to show in the UI.
+    //Here in this method we put the logic for caching.
+    //This will have all the data sources we have. In this case the Remote API and local database. This method has to decide that where
+    //the specific data is available and from where it has to forwarded to the viewModel for showing up in the UI.
+
+    //FOR CACHING: we should STICK to the SINGLE SOURCE OF TRUTH principle: the data for the view model should always come from
+    //the database.
     override fun getWordInfo(word: String): Flow<Resource<List<WordInfo>>> {
         //code for caching will be here
         TODO()
