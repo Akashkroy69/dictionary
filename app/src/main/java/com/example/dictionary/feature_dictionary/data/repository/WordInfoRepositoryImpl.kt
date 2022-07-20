@@ -6,6 +6,9 @@ import com.example.dictionary.feature_dictionary.data.remote.DictionaryAPI
 import com.example.dictionary.feature_dictionary.domain.model.WordInfo
 import com.example.dictionary.feature_dictionary.domain.repository.WordInfoRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
+import java.io.IOException
 
 class WordInfoRepositoryImpl(
     //this class constructor takes following 2 dependencies
@@ -19,8 +22,41 @@ class WordInfoRepositoryImpl(
 
     //FOR CACHING: we should STICK to the SINGLE SOURCE OF TRUTH principle: the data for the view model should always come from
     //the database.
-    override fun getWordInfo(word: String): Flow<Resource<List<WordInfo>>> {
-        //code for caching will be here
-        TODO()
+    override fun getWordInfo(word: String): Flow<Resource<List<WordInfo>>> = flow {
+
+        //we use the following line of code when we want to emit a specific value. Like SUCCESS or LOADING.
+        //this value will be picked by our view model to trigger specific action, like showing 'progress bar'
+        emit(Resource.Loading())
+
+
+        //now we will try to find the word in our local cache.
+        val wordInfos = dao.getWordInfos(word).map { it.toWordInfo() }
+        //with this variable we can emit the value. If our local cache has the word, it will emit the wordInfos and that will be
+        //picked by our View Model
+        emit(Resource.Loading(data = wordInfos))
+
+
+        //code for fetching data from the API
+        try {
+            val remoteWordInfo = api.getWordInfo(word)
+            dao.deleteWordInfos(remoteWordInfo.map { it.word })
+            dao.insertWordInfos(remoteWordInfo.map { it.toWordInfoEntity() })
+
+        } catch (e: HttpException) {
+            emit(
+                Resource.Error(
+                    message = "oops, something went wrong",
+                    data = wordInfos
+                )
+            )
+
+        } catch (e: IOException) {
+            emit(
+                Resource.Error(
+                    message = "oops, internet down or server is not reachable",
+                    data = wordInfos
+                )
+            )
+        }
     }
 }
