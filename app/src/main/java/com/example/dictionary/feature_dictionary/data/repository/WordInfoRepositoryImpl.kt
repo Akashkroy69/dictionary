@@ -15,6 +15,7 @@ class WordInfoRepositoryImpl(
     private val api: DictionaryAPI,
     private val dao: WordInfoDAO
 ) : WordInfoRepository {
+    //This app is basically focussing on caching. And the caching logic lies here. This is the most important concept of the project
 
     //Here in this method we put the logic for caching.
     //This will have all the data sources we have. In this case the Remote API and local database. This method has to decide that where

@@ -17,5 +17,4 @@ interface WordInfoDAO {
 
     @Query("SELECT * from WordInfoEntity WHERE word LIKE '%' || :word || '%'")
     suspend fun getWordInfos(word: String): List<WordInfoEntity>
-
 }
