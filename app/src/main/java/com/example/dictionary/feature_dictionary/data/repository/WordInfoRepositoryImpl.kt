@@ -59,5 +59,11 @@ class WordInfoRepositoryImpl(
                 )
             )
         }
+
+        //till now we have not emitted the information in the UI. We just have fetched the information from
+        //the API and have added to the Database.
+        val newWordInfo = dao.getWordInfos(word).map { it.toWordInfo() }
+        //now we will emit the result fetched from the database through API for the ViewModel
+        emit(Resource.Success(newWordInfo))
     }
 }
